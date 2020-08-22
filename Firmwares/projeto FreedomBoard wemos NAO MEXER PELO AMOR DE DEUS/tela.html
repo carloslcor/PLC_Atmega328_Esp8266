@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Tela de Estudo</title>
+  <meta charset="utf-8" name="viewport"
+    content="width=device-width, minimumscale=1.0, maximum-scale=1.0, initial-scale=1" />
+  <style>
+  /* Estilo iOS */
+  .switch__container {
+    margin: 15px auto;
+    width: 60px;
+  }
+
+  .switch {
+    visibility: hidden;
+    position: absolute;
+    margin-left: -9999px;
+  }
+
+  .switch + label {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+  }
+
+  .switch--shadow + label {
+    padding: 2px;
+    width: 60px;
+    height: 30px;
+    background-color: #dddddd;
+    border-radius: 60px;
+  }
+  .switch--shadow + label:before,
+  .switch--shadow + label:after {
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    bottom: 1px;
+    content: "";
+  }
+  .switch--shadow + label:before {
+    right: 1px;
+    background-color: #f1f1f1;
+    border-radius: 30px;
+    transition: background 0.4s;
+  }
+  .switch--shadow + label:after {
+    width: 30px;
+    background-color: #fff;
+    border-radius: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s;
+  }
+  .switch--shadow:checked + label:before {
+    background-color: #8ce196;
+  }
+  .switch--shadow:checked + label:after {
+    transform: translateX(30px);
+  }
+</style>  
+</head>
+
+<body>
+  
+<h1>Freedom Board</h1>
+
+<table>
+   <tr>
+    <th>Pinos Digitais    </th>
+    <th>Pinos Analógicas    </th>
+    <th>Saídas a Relé</th>
+  </tr>
+  <tr>
+    <td><h3>D1: <span id="d1"></span></h3></td>
+    <td><h3>A0: <span id="a0"></span></h3></td>
+    <td><h3>R1: <span id="r1"></span></h3></td>
+  </tr>
+  <tr>
+    <td><h3>D2: <span id="d2"></span></h3></td>
+    <td><h3>A0: <span id="a1"></span></h3></td>
+    <td><h3>R2: <span id="r2"></span></h3></td>
+  </tr>
+  <tr>
+    <td><h3>D3: <span id="d3"></span></h3></td>
+    <td><h3>A0: <span id="a2"></span></h3></td>
+    <td><h3>R3: <span id="r3"></span></h3></td>
+  </tr>
+    <tr>
+    <td><h3>D4: <span id="d4"></span></h3></td>
+    <td><h3>A0: <span id="a3"></span></h3></td>
+    <td><h3>R4: <span id="r4"></span></h3></td>
+  </tr>
+    <tr>
+    <td><h3>D5: <span id="d5"></span></h3></td>
+    <td><h3>A0: <span id="a4"></span></h3></td>
+    <td></td>
+  </tr>
+    <tr>
+    <td><h3>D6: <span id="d6"></span></h3></td>
+    <td><h3>A0: <span id="a5"></span></h3></td>
+    <td></td>
+  </tr>
+    <tr>
+    <td><h3>D7: <span id="d7"></span></h3></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+</table>
+
+
+<div class="switch__container" style="display: inline-flex;">
+            <input onClick="MudaEstadoAuxR1(checked)" id="switch-shadow-r1" class="switch switch--shadow" type="checkbox">
+            <label for="switch-shadow-r1"></label>
+          </div>
+
+<div class="switch__container" style="display: inline-flex;">
+            <input onClick="MudaEstadoAuxR2(checked)" id="switch-shadow-r2" class="switch switch--shadow" type="checkbox">
+            <label for="switch-shadow-r2"></label>
+          </div>
+
+<div class="switch__container" style="display: inline-flex;">
+            <input onClick="MudaEstadoAuxR3(checked)" id="switch-shadow-r3" class="switch switch--shadow" type="checkbox">
+            <label for="switch-shadow-r3"></label>
+          </div>
+
+<div class="switch__container" style="display: inline-flex;">
+            <input onClick="MudaEstadoAuxR4(checked)" id="switch-shadow-r4" class="switch switch--shadow" type="checkbox">
+            <label for="switch-shadow-r4"></label>
+          </div>
+
+<h1>Console</h1> <input placeholder="Digite um Texto" id="input1"> <button
+    onClick="setValor(1)">Enviar</button>
+
+  <p>Varlos Enviado: <span id="valorEnviado"></span></p>
+
+  <script>
+    function getAllStatus() {
+      console.log("Entrou no getAll");
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          var obj = JSON.parse(this.responseText);
+          document.getElementById("d1").innerHTML = obj.data[0].d1;
+          document.getElementById("d2").innerHTML = obj.data[1].d2;
+
+
+
+          if(obj.data[2].botao1 == "0"){
+            document.getElementById("switch-shadow-r1").checked = false;
+          }
+          if(obj.data[2].botao1 == "1"){
+            document.getElementById("switch-shadow-r1").checked = true;
+          }
+
+
+          if(obj.data[3].botao2 == "0"){
+            document.getElementById("switch-shadow-r2").checked = false;
+          }
+          if(obj.data[3].botao2 == "1"){
+            document.getElementById("switch-shadow-r2").checked = true;
+          }
+
+
+          if(obj.data[4].botao3 == "0"){
+            document.getElementById("switch-shadow-r3").checked = false;
+          }
+          if(obj.data[4].botao3 == "1"){
+            document.getElementById("switch-shadow-r3").checked = true;
+          }
+
+          if(obj.data[5].botao4 == "0"){
+            document.getElementById("switch-shadow-r4").checked = false;
+          }
+          if(obj.data[5].botao4 == "1"){
+            document.getElementById("switch-shadow-r4").checked = true;
+          }
+
+          console.log(obj);
+
+        };
+      };
+      xhttp.open("GET", "data", true);
+      xhttp.send();
+    };
+
+    function setValor(valor) {
+      console.log("Set Valor");
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("valorEnviado").innerHTML = this.responseText;
+        }
+      };
+      var valorInput = document.getElementById("input1").value;
+      console.log(valorInput); xhttp.open("GET", "setValue?valueInput=" + valorInput, true);
+      xhttp.send();
+    };
+
+    function MudaEstadoAuxR1(checked){
+      if(checked == true){
+        mudaAuxR1(1);
+        console.log("Botao ligado", + checked);
+      };
+
+      if(checked == false){
+        mudaAuxR1(0);
+        console.log("Botao Desligado", + checked);
+      }
+
+    };
+
+        function mudaAuxR1(status) {
+      console.log("Set Valor botao", + status);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          
+        }
+      };
+         
+      xhttp.open("GET", "setBotao1?valor="+status, true);
+      xhttp.send();
+ 
+    };
+
+        function MudaEstadoAuxR2(checked){
+      if(checked == true){
+        mudaAuxR2(1);
+        console.log("Botao ligado", + checked);
+      };
+
+      if(checked == false){
+        mudaAuxR2(0);
+        console.log("Botao Desligado", + checked);
+      }
+
+    };
+
+        function mudaAuxR2(status) {
+      console.log("Set Valor botao", + status);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          
+        }
+      };
+         
+      xhttp.open("GET", "setBotao2?valor="+status, true);
+      xhttp.send();
+ 
+    };
+
+        function MudaEstadoAuxR3(checked){
+      if(checked == true){
+        mudaAuxR3(1);
+        console.log("Botao ligado", + checked);
+      };
+
+      if(checked == false){
+        mudaAuxR3(0);
+        console.log("Botao Desligado", + checked);
+      }
+
+    };
+
+        function mudaAuxR3(status) {
+      console.log("Set Valor botao", + status);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          
+        }
+      };
+         
+      xhttp.open("GET", "setBotao3?valor="+status, true);
+      xhttp.send();
+ 
+    };
+
+        function MudaEstadoAuxR4(checked){
+      if(checked == true){
+        mudaAuxR4(1);
+        console.log("Botao ligado", + checked);
+      };
+
+      if(checked == false){
+        mudaAuxR4(0);
+        console.log("Botao Desligado", + checked);
+      }
+
+    };
+
+        function mudaAuxR4(status) {
+      console.log("Set Valor botao", + status);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          
+        }
+      };
+         
+      xhttp.open("GET", "setBotao4?valor="+status, true);
+      xhttp.send();
+ 
+    };
+
+
+    getAllStatus(); 
+  </script>
+</body>
+
+</html>
